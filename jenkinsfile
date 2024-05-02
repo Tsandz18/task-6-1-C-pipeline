@@ -44,7 +44,7 @@ pipeline {
                      attachmentsPattern: '**/*.log',
                      body: 'The pipeline has succeeded.',
                      subject: "Pipeline Success: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                     mail to: 'tharakasandamal18@gmail.com'
+                     to: 'tharakasandamal18@gmail.com'
         }
         failure {
             emailext mimeType: 'text/html',
@@ -52,7 +52,7 @@ pipeline {
                      attachmentsPattern: '**/*.log',
                      body: 'The pipeline has failed.',
                      subject: "Pipeline Failure: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                     mail to: 'tharakasandamal18@gmail.com'
+                     to: 'tharakasandamal18@gmail.com'
         }
     }
 }
