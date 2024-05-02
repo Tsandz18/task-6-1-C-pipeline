@@ -3,56 +3,103 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                echo 'Building the code using Maven.'
+                echo 'Build the code using Maven.' // Reference: Maven is a popular build automation tool for Java projects.
             }
         }
         stage('Unit and Integration Tests') {
             steps {
-                echo 'Running tests using JUnit for unit testing and Selenium for integration testing.'
+                echo 'Run unit tests using JUnit.' // Reference: JUnit is a widely used unit testing framework for Java applications.
+                echo 'Run integration tests using Selenium.' // Reference: Selenium is a tool for automating web browser testing.
+            }
+            post {
+                success {
+                    emailext mimeType: 'text/html',
+                             attachLog: true,
+                             
+                             subject: "Unit and Integration Tests Passed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                             to: 'tharakasandamal18@gmail.com',
+                             body: '''<html>
+                                        <body>
+                                            <h2 style="color: green;">Pipeline Succeeded</h2>
+                                            <p style="color: navy;"><strong>Unit and Integration Tests Passed</strong></p>
+                                            <p>The unit and integration tests have passed successfully.</p>
+                                            <p>You can view the build log <a href="${BUILD_URL}console">${BUILD_URL}console</a>.</p>
+                                        </body>
+                                      </html>'''
+                }
+                failure {
+                    emailext mimeType: 'text/html',
+                             attachLog: true,
+                             
+                             subject: "Unit and Integration Tests Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                             to: 'tharakasandamal18@gmail.com',
+                             body: '''<html>
+                                        <body>
+                                            <h2 style="color: red;">Pipeline Failed</h2>
+                                            <p style="color: navy;"><strong>Unit and Integration Tests Failed</strong></p>
+                                            <p>The unit and integration tests have failed.</p>
+                                            <p>You can view the build log <a href="${BUILD_URL}console">${BUILD_URL}console</a>.</p>
+                                        </body>
+                                      </html>'''
+                }
             }
         }
         stage('Code Analysis') {
             steps {
-                echo 'Analyzing code with SonarQube.'
+                echo 'Integrate SonarQube for code analysis.' // Reference: SonarQube is a static code analysis tool that detects bugs, vulnerabilities, and code smells in your codebase.
             }
         }
         stage('Security Scan') {
             steps {
-                echo 'Performing security scan with OWASP ZAP.'
+                echo 'Perform security scan using OWASP ZAP.' // Reference: OWASP ZAP (Zed Attack Proxy) is a security tool for finding vulnerabilities in web applications.
+            }
+            post {
+                success {
+                    emailext mimeType: 'text/html',
+                             attachLog: true,
+                             
+                             subject: "Security Scan Passed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                             to: 'tharakasandamal18@gmail.com',
+                             body: '''<html>
+                                        <body>
+                                            <h2 style="color: green;">Pipeline Succeeded</h2>
+                                            <p style="color: navy;"><strong>Security Scan Passed</strong></p>
+                                            <p>The security scan has passed successfully.</p>
+                                            <p>You can view the build log <a href="${BUILD_URL}console">${BUILD_URL}console</a>.</p>
+                                        </body>
+                                      </html>'''
+                }
+                failure {
+                    emailext mimeType: 'text/html',
+                             attachLog: true,
+                             
+                             subject: "Security Scan Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                             to: 'tharakasandamal18@gmail.com',
+                             body: '''<html>
+                                        <body>
+                                            <h2 style="color: red;">Pipeline Failed</h2>
+                                            <p style="color: navy;"><strong>Security Scan Failed</strong></p>
+                                            <p>The security scan has failed.</p>
+                                            <p>You can view the build log <a href="${BUILD_URL}console">${BUILD_URL}console</a>.</p>
+                                        </body>
+                                      </html>'''
+                }
             }
         }
         stage('Deploy to Staging') {
             steps {
-                echo 'Deploying application to AWS EC2 staging instance.'
+                echo 'Deploy application to AWS EC2 staging instance.' // Reference: AWS EC2 is a popular cloud computing service for deploying applications.
             }
         }
         stage('Integration Tests on Staging') {
             steps {
-                echo 'Running integration tests in the staging environment.'
+                echo 'Run integration tests on staging environment.' // Reference: Integration tests on a staging environment ensure the application behaves as expected in a production-like setting.
             }
         }
         stage('Deploy to Production') {
             steps {
-                echo 'Deploying application to AWS EC2 production instance.'
+                echo 'Deploy application to AWS EC2 production instance.' // Reference: Deployment to production is the final step in the pipeline, making the application available to users.
             }
-        }
-    }
-    post {
-        success {
-            emailext mimeType: 'text/html',
-                     attachLog: true,
-                     attachmentsPattern: '**/*.log',
-                     body: 'The pipeline has succeeded.',
-                     subject: "Pipeline Success: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                     to: 'tharakasandamal18@gmail.com'
-        }
-        failure {
-            emailext mimeType: 'text/html',
-                     attachLog: true,
-                     attachmentsPattern: '**/*.log',
-                     body: 'The pipeline has failed.',
-                     subject: "Pipeline Failure: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                     to: 'tharakasandamal18@gmail.com'
         }
     }
 }
